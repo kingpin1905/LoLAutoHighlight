@@ -10,7 +10,7 @@ It is made to speed up highlights editing, not replace the editor.
 3. It create clips by cropping the original video with MoviePy
 
 ### How to use:
-1. Put your League of Legends video (.mp4) in the input folder
+1. Put your League of Legends video (.mp4) in the input folder (must be a video from the spectator position)
 2. Run the script
 3. Collect the clips in the output folder
 
