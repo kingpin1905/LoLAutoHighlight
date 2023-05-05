@@ -43,9 +43,6 @@ def findRelevantFramesFromVideo(video):
     for frame_counter in tqdm(list(range(0, total_frames, CAP_INTERVAL*int(fps))), colour="green"):
         video.set(1, frame_counter)
         ret, frame = video.read()
-
-        if not ret:
-            break
             
         if isFrameRelevent(frame):
             frames.append(frame_counter)
