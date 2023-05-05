@@ -6,6 +6,8 @@ TIME_BEFORE_EVENT = 15 #capture time before the event (kill, dragon, baron, etc.
 TIME_AFTER_EVENT = 5 #capture time after the event in seconds
 ###########################################################
 
+CODEC = "libx264" #h264_nvenc for nvidia gpu, libx264 for cpu
+BITRATE = "6000k"
 KILL_FEED_AREA = (715, 770, 1655, 1710) #coordinates of the killfeed in the video (top left y, bottom right y, top left x, bottom right x)
 CAP_INTERVAL = 4 #Capture interval in seconds (LoL kill feed lasts 5 second)
 KILL_FEED_DETECTION_THRESHOLD = 0.8 
@@ -100,7 +102,7 @@ def cutVideo(videoPath, timestampsToCut, outputDir):
         end_time = math.floor(end_frame / fps)
         clip = VideoFileClip(videoPath).subclip(start_time, end_time)
         timeInSeconds = (start_time,end_time)
-        clip.write_videofile(f"{outputDir}{videoName}_cut_video{timeInSeconds}.mp4")
+        clip.write_videofile(f"{outputDir}{videoName}_cut_video{timeInSeconds}.mp4", codec = CODEC , bitrate= BITRATE)
 
 ################################
 #MAIN
@@ -119,5 +121,4 @@ for videoPath in videosPaths:
 #TODO load video
 #find relevent frames
 #find cutting points
-#cut video
-
+#cut videop
