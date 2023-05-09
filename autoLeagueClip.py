@@ -44,14 +44,14 @@ def findRelevantFramesFromVideo(video):
         video.set(1, frame_counter)
         ret, frame = video.read()
             
-        if isFrameRelevent(frame):
+        if isFrameRelevant(frame):
             frames.append(frame_counter)
 
     video.release()
     return frames
 
 #check if the frame contains the wanted icon
-def isFrameRelevent(frame):
+def isFrameRelevant(frame):
 
     #crop the video to the killfeed
     #NOTE: the killfeed might change position depending on your UI settings
@@ -114,8 +114,3 @@ for videoPath in videosPaths:
     releventFrames = findRelevantFramesFromVideo(video)
     timestampsToCut = addRegroupTime(joinCloseFrames(releventFrames))
     cutVideo(videoPath, timestampsToCut, outputDir=VIDEO_OUTPUT_DIR)
-
-#TODO load video
-#find relevent frames
-#find cutting points
-#cut videop
