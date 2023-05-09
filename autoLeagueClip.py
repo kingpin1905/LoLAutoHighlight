@@ -9,7 +9,7 @@ TIME_AFTER_EVENT = 5 #capture time after the event in seconds
 CODEC = "libx264" #h264_nvenc for nvidia gpu, libx264 for cpu
 BITRATE = "6000k"
 KILL_FEED_AREA = (715, 770, 1655, 1710) #coordinates of the killfeed in the video (top left y, bottom right y, top left x, bottom right x)
-CAP_INTERVAL = 4 #Capture interval in seconds (LoL kill feed lasts 5 second)
+CAP_INTERVAL = 4.5 #Capture interval in seconds (LoL kill feed lasts 5 second)
 KILL_FEED_DETECTION_THRESHOLD = 0.8 
 REGROUP_TIME = TIME_BEFORE_EVENT + TIME_AFTER_EVENT + 5
 ICON_DIR = ("icons/")
@@ -40,7 +40,7 @@ def findRelevantFramesFromVideo(video):
 
     total_frames = int(video.get(cv2.CAP_PROP_FRAME_COUNT))
 
-    for frame_counter in tqdm(list(range(0, total_frames, CAP_INTERVAL*int(fps))), colour="green"):
+    for frame_counter in tqdm(list(range(0, total_frames, math.floor(CAP_INTERVAL*int(fps)))), colour="green"):
         video.set(1, frame_counter)
         ret, frame = video.read()
             
