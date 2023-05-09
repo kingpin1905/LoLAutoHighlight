@@ -2,8 +2,8 @@
 # USER MODIFIABLE PARAMETERS
 VIDEO_DIR= "input/"
 VIDEO_OUTPUT_DIR = "output/"
-TIME_BEFORE_EVENT = 15 #capture time before the event (kill, dragon, baron, etc.) in seconds
-TIME_AFTER_EVENT = 5 #capture time after the event in seconds
+TIME_BEFORE_EVENT = 10 #capture time before the event (kill, dragon, baron, etc.) in seconds
+TIME_AFTER_EVENT = 7 #capture time after the event in seconds
 ###########################################################
 
 CODEC = "libx264" #h264_nvenc for nvidia gpu, libx264 for cpu
@@ -47,7 +47,6 @@ def findRelevantFramesFromVideo(video):
         if isFrameRelevant(frame):
             frames.append(frame_counter)
 
-    video.release()
     return frames
 
 #check if the frame contains the wanted icon
@@ -65,6 +64,36 @@ def isFrameRelevant(frame):
         if loc is not None:
             return True
     return False
+
+def findBeginningOfEvent(video, frameNb):
+    frameToRewind = math.floor(1 * fps/2)
+    video.set(1, frameNb)
+    ret, frame = video.read()
+    while isFrameRelevant(frame):
+        frameNb -= frameToRewind
+        video.set(1, frameNb)
+        ret, frame = video.read()
+    return frameNb + frameToRewind
+
+def findBeginningOfEventFromEnd(video, frameNb):
+    frameToRewind = math.floor(1 * fps/2)
+    video.set(1, frameNb)
+    ret, frame = video.read()
+    while isFrameRelevant(frame):
+        frameNb += frameToRewind
+        video.set(1, frameNb)
+        ret, frame = video.read()
+    return frameNb - frameToRewind - (5*fps)
+
+def getExactBeginningAndEnd(video, frames):
+    joinedFrames = []
+    for frame in tqdm(frames, colour="red"):
+        if frame[0] == frame[1]:
+            frameNb = findBeginningOfEventFromEnd(video, frame[0])
+            joinedFrames.append([frameNb, frameNb])
+        else:
+            joinedFrames.append([findBeginningOfEvent(video, frame[0]), findBeginningOfEventFromEnd(video, frame[1])])
+    return joinedFrames
 
 #Join relevent frames together
 def joinCloseFrames(frames):
@@ -111,6 +140,8 @@ for videoPath in videosPaths:
     fps = video.get(cv2.CAP_PROP_FPS)
 
     print(f"processing video:  + {videoName}")
-    releventFrames = findRelevantFramesFromVideo(video)
-    timestampsToCut = addRegroupTime(joinCloseFrames(releventFrames))
+    relevantFrames = findRelevantFramesFromVideo(video)
+    closeFrames = joinCloseFrames(relevantFrames)
+    exactEventFrames = getExactBeginningAndEnd(video, closeFrames)
+    timestampsToCut = addRegroupTime(exactEventFrames)
     cutVideo(videoPath, timestampsToCut, outputDir=VIDEO_OUTPUT_DIR)
