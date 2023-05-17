@@ -10,11 +10,11 @@ BITRATE = "6000k"
 CODEC = "libx264" #h264_nvenc for nvidia gpu, libx264 for cpu 
 #(might require to install nvidia drivers)
 
-KILL_FEED_AREA = (715, 770, 1655, 1710) #coordinates of the killfeed in the video (top left y, bottom right y, top left x, bottom right x
+KILL_FEED_AREA = (715, 800, 1655, 1720) #coordinates of the killfeed in the video (top left y, bottom right y, top left x, bottom right x
 #NOTE: the killfeed might change position depending on your UI settings
 #I made it very large so it should work with most settings but it is slower.
 
-KILL_FEED_DETECTION_THRESHOLD = 0.8 #threshold for the killfeed detection (0.0 to 1.0)
+KILL_FEED_DETECTION_THRESHOLD = 0.75 #threshold for the killfeed detection (0.0 to 1.0)
 #the lower it is, the more clip it will find, but it will also find false positives (no event clips)
 
 CAP_INTERVAL = 4.5 #Capture interval in seconds (LoL kill feed lasts 5 second)
